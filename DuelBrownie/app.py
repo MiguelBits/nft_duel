@@ -6,10 +6,12 @@ app = Flask(__name__)
 
 @app.route('/',methods = ['POST', 'GET'])
 def index():
-   
-   setvalue = request.form['set-value']
-   setOnEthereum(setvalue)
-   ethereumValue = getOnEthereum()
+   if request.method == 'POST':
+      setvalue = request.form['set-value']
+      setOnEthereum(setvalue)
+      ethereumValue = getOnEthereum()
+   else:
+      ethereumValue = getOnEthereum()
 
    return render_template("index.html", value = ethereumValue)
 
@@ -22,7 +24,7 @@ def getOnEthereum():
    web3.eth.defaultAccount = web3.eth.accounts[0]
 
    compiled_contract_path = 'build/contracts/DuelContract.json'
-   deployed_contract_address = '0x830F9011E10F27bD26061b39390D0949756eb317'
+   deployed_contract_address = '0x7d0d0bb6b2CE9D05F1B25c799C0DF411Eb8AF978'
 
    with open(compiled_contract_path) as file:
       contract_json = json.load(file)  # load contract info as JSON
@@ -43,7 +45,7 @@ def setOnEthereum(setvalue):
    web3.eth.defaultAccount = web3.eth.accounts[0]
 
    compiled_contract_path = 'build/contracts/DuelContract.json'
-   deployed_contract_address = '0x830F9011E10F27bD26061b39390D0949756eb317'
+   deployed_contract_address = '0x7d0d0bb6b2CE9D05F1B25c799C0DF411Eb8AF978'
 
    with open(compiled_contract_path) as file:
       contract_json = json.load(file)  # load contract info as JSON

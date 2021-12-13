@@ -9,7 +9,7 @@ web3 = Web3(HTTPProvider(blockchain_address))
 # Set the default account (so we don't need to set the "from" for every transaction call)
 web3.eth.defaultAccount = web3.eth.accounts[0]
 
-compiled_contract_path = 'build/contracts/DuelCoin.json'
+compiled_contract_path = 'build/contracts/DuelContract.json'
 deployed_contract_address = '0xd8C4B517CA1c339A55Dc41008d788B80F8EFB84f'
 
 with open(compiled_contract_path) as file:
