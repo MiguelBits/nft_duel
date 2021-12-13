@@ -1,5 +1,18 @@
 {
+  "name": "duelbrownie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.0"
+    "openzeppelin-solidity": "4.4.0"
   }
 }

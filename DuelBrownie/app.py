@@ -22,6 +22,7 @@ with open(compiled_contract_path) as file:
 @app.route('/',methods = ['POST', 'GET'])
 def index():
    if request.method == 'POST':
+      #TODO sanitize input pls
       setvalue = request.form['set-value']
       setOnEthereum(setvalue)
       ethereumValue = getOnEthereum()
