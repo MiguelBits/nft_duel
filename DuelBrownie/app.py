@@ -21,7 +21,7 @@ def getOnEthereum():
    # Set the default account (so we don't need to set the "from" for every transaction call)
    web3.eth.defaultAccount = web3.eth.accounts[0]
 
-   compiled_contract_path = 'build/contracts/DuelCoin.json'
+   compiled_contract_path = 'build/contracts/DuelContract.json'
    deployed_contract_address = '0x830F9011E10F27bD26061b39390D0949756eb317'
 
    with open(compiled_contract_path) as file:
@@ -42,7 +42,7 @@ def setOnEthereum(setvalue):
    # Set the default account (so we don't need to set the "from" for every transaction call)
    web3.eth.defaultAccount = web3.eth.accounts[0]
 
-   compiled_contract_path = 'build/contracts/DuelCoin.json'
+   compiled_contract_path = 'build/contracts/DuelContract.json'
    deployed_contract_address = '0x830F9011E10F27bD26061b39390D0949756eb317'
 
    with open(compiled_contract_path) as file:
