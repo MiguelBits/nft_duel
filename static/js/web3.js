@@ -11,9 +11,9 @@ async function login() {
     user = await Moralis.authenticate();
   }
   
-  balances = getBalance();
+  getBalance();
   console.log("logged in user:", user);
-  console.log("balances of user:", balances);
+  //console.log("balances of user:", balances);
 
   var x = document.getElementById("loginButton");
   x.style.display = "none";
@@ -31,12 +31,17 @@ async function logOut() {
   x.style.display = "none";
   var y = document.getElementById("loginButton");
   y.style.display = "block";
+  document.getElementById("balance").innerHTML = "?";
 }
 
 async function getBalance(){
-  const balances = await Moralis.Web3.getAllERC20();
-  //document.getElementById("balance").innerHTML = balances;
-  return balances
+  //this is how to handle promise value
+  const balance = await Moralis.Web3.getERC20().then(value =>{
+    //console.log(value["balance"]);
+    document.getElementById("balance").innerHTML = value["balance"];
+  })
+
+ 
 }
 /*//HUGE TODO
 async function addToken_Metamask(){
