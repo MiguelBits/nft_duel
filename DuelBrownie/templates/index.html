@@ -47,7 +47,7 @@
                            <div class="login-signup">
                               <ul>
                                  <!-- LOGIN BUTTON WITH METAMASK -->
-                                 <button id='loginButton' onclick="" class="mx-auto rounded-md p-2 bg-purple-500 text-white">
+                                 <button id='loginButton' class="mx-auto rounded-md p-2 bg-purple-500 text-white">
                                     Login with MetaMask
                                   </button>
                                  <p id='userWallet' class='text-lg text-gray-600 my-2'></p>
@@ -80,6 +80,8 @@
                           
                                 window.userWalletAddress = accounts[0]
                                 userWallet.innerText = window.userWalletAddress
+                                //Send JSON with address from metamask
+                                login();
                                 loginButton.innerText = 'Sign out of MetaMask'
                           
                                 loginButton.removeEventListener('click', loginWithMetaMask)
@@ -102,6 +104,16 @@
                               window.addEventListener('DOMContentLoaded', () => {
                                 toggleButton()
                               });
+                              function login(){
+
+                                 var dict = {address : userWallet.innerText};
+                                 $.ajax({
+                                    type: "POST", 
+                                    url: "http://127.0.0.1:5000/login", //localhost Flask
+                                    data : JSON.stringify(dict),
+                                    contentType: "application/json",
+                                 });
+                              }
                             </script>
                         </div>
                         <div class="help-r hidden-xs">

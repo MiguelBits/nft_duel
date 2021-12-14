@@ -24,11 +24,18 @@ with open(DuelToken_compiled_contract_path) as file:
 def index():
    
    #TODO only for demonstration purposes
-   account = "0xa49d133457064fd5d1510700fcE56d24F3f0EeED"
-   checkBalanceValue = checkBalance(account)
-   return render_template("index.html", amount=checkBalanceValue)
    
-   
+   return render_template("index.html")
+
+@app.route('/login',methods = ['POST'])
+def login():
+   #json request
+   account = request.get_json()["address"]
+   #lower case address to web3 address
+   accountWeb3 = Web3.toChecksumAddress(account)
+   #erc20 token
+   address_balance = str(checkBalance(accountWeb3))
+   return render_template("index.html", amount = address_balance)
 
 def checkBalance(account):
    #access contract
