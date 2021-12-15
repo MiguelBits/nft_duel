@@ -54,7 +54,7 @@
                               <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
                               <ul>
                                  <!-- LOGIN BUTTON WITH METAMASK -->
-                                 <button id='loginButton' class="mx-auto rounded-md p-2 bg-purple-500 text-white underline decoration-double" >
+                                 <button id='loginButton' class="mx-auto rounded-md p-2 bg-purple-500 text-white" >
                                     Login with MetaMask
                                   </button>
                                   <button id='logoutButton' class="mx-auto rounded-md p-2 bg-purple-500 text-white">
@@ -97,8 +97,8 @@
                </div>
                <div class="modal-body">
                   <ul>
-                     <li><a href="#" onclick="buyToken()"><img src="/static/images/flag-up-1.png" alt="" /> Ethereum</a></li>
-                     <li><a href="#"><img src="/static/images/flag-up-2.png" alt="" /> Bitcoin </a></li>
+                     <li><a href="#"><img src="images/flag-up-1.png" alt="" /> United States</a></li>
+                     <li><a href="#"><img src="images/flag-up-2.png" alt="" /> France </a></li>
                   </ul>
                </div>
             </div>
@@ -107,6 +107,24 @@
             <!--/.container-fluid --> 
          </nav>
       </header>
+      <!-- Modal -->
+      <div class="modal fade lug" id="myModal" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Add Token</h4>
+               </div>
+               <div class="modal-body">
+                  <ul>
+                     <li><a href="#"><img src="/static/images/flag-up-1.png" alt="" /> Ethereum</a></li>
+                     <li><a href="#"><img src="/static/images/flag-up-2.png" alt="" /> Duel Token </a></li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
       <div id="sidebar" class="top-nav">
          <ul id="sidebar-nav" class="sidebar-nav">
             <li><a href="#">Help</a></li>
