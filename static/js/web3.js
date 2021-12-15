@@ -44,12 +44,24 @@ async function getBalance(){
     document.getElementById("balance").innerHTML = value["balance"];
     //ether balance, TODO balance of DuelToken
   })
-
- 
 }
+
+async function buyToken(){
+  //send 0.5eth to wallet index 1
+  user = await Moralis.authenticate();
+  const options = {
+    type: "native",
+    amount: Moralis.Units.Token("0.5","18"),
+    receiver: "0xDd4964b82e0A7Ae51Bf02568088CcB98A57aA595"
+  }
+  let result = await Moralis.transfer(options)
+  return result
+}
+
 async function addToken(){
   window.alert(tokenAddress);
 }
+
 
 /*//HUGE TODO
 
@@ -72,5 +84,7 @@ async function getAllNFTS(){
   console.log(userEthNFTs)
 }
 */
+//Clicks
 document.getElementById("loginButton").onclick = login;
 document.getElementById("logoutButton").onclick = logOut;
+
