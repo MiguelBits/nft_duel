@@ -1,3 +1,5 @@
+const tokenAddress = "0x8a57e436A724B07c9Ecc87c7F491542B02fF84e9";
+document.getElementById("tokenAddress").innerHTML = tokenAddress;
 
 // connect to Moralis server
 const serverUrl = "https://gqbpmhmhaaty.usemoralis.com:2053/server";
@@ -36,17 +38,20 @@ async function logOut() {
 
 async function getBalance(){
   //this is how to handle promise value
+  
   const balance = await Moralis.Web3.getERC20().then(value =>{
     //console.log(value["balance"]);
     document.getElementById("balance").innerHTML = value["balance"];
+    //ether balance, TODO balance of DuelToken
   })
 
  
 }
-/*//HUGE TODO
-async function addToken_Metamask(){
-
+async function addToken(){
+  window.alert(tokenAddress);
 }
+
+/*//HUGE TODO
 
 async function getAllNFTS(){
   
