@@ -23,6 +23,8 @@
       <link rel="stylesheet" href="/static/css/slick.min.css">
       <!--responsive css-->
       <link rel="stylesheet" href="/static/css/responsive.css">
+      <!--my css-->
+      <link rel="stylesheet" href="/static/css/my_css.css">
    </head>
    <body>
       <header id="header" class="top-head">
@@ -42,7 +44,7 @@
                      </div>
                      <form class="navbar-form navbar-left web-sh">
                         <div class="form">
-                           <input type="text" class="form-control" placeholder="Search for products or companies">
+                           <input type="text" class="form-control" placeholder="Search for cards or duels">
                         </div>
                      </form>
                   </div>
@@ -108,7 +110,7 @@
          <ul id="sidebar-nav" class="sidebar-nav">
             <li><a href="#">Help</a></li>
             <li><a href="howitworks.html">How it works</a></li>
-            <li><a href="#">chamb for Business</a></li>
+            <li><a href="#">Duel for NFT</a></li>
          </ul>
       </div>
       <div class="page-content-product">
@@ -116,7 +118,7 @@
             <div class="container">
                <div class="row clearfix">
                   <div class="find-box">
-                     <h1>Find your next product or<br>business partner here.</h1>
+                     <h1>Find your next duel or<br>cards for your deck here.</h1>
                      <h4>It has never been easier.</h4>
                      <div class="product-sh">
                         <div class="col-sm-6">
@@ -127,9 +129,9 @@
                         <div class="col-sm-3">
                            <div class="form-sh">
                               <select class="selectpicker">
-                                 <option>Textiles</option>
-                                 <option>Furniture</option>
-                                 <option>Leather</option>
+                                 <option>Cards</option>
+                                 <option>Decks</option>
+                                 <option>Friends</option>
                               </select>
                            </div>
                         </div>
@@ -142,64 +144,74 @@
                </div>
                <div class="row clearfix">
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <link rel="preconnect" href="https://fonts.gstatic.com"> 
+                           <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+                           <button class="cyber_button" onclick="buyBooster('yugi')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(143, 16, 54);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Yugi Muto</h4>
                            <img class="boosters" src="/static/images/product/1.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;" />
                         </div>
                      </a>
                   </div>
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <button class="cyber_button" onclick="buyBooster('kaiba')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(88, 220, 243);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Seto Kaiba</h4>
                            <img src="/static/images/product/2.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;"/>
                         </div>
                      </a>
                   </div>
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <button class="cyber_button" onclick="buyBooster('joey')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(46, 158, 42);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Joey Wheeler</h4>
                            <img src="/static/images/product/4.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;"/>
                         </div>
                      </a>
                   </div>
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <button class="cyber_button" onclick="buyBooster('marik')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(221, 248, 66);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Marik Ishtar</h4>
                            <img src="/static/images/product/5.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;"/>
                         </div>
                      </a>
                   </div>
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <button class="cyber_button" onclick="buyBooster('jaden')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(167, 0, 0);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Jaden Yuki</h4>
                            <img src="/static/images/product/10.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;"/>
                         </div>
                      </a>
                   </div>
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <button class="cyber_button" onclick="buyBooster('chazz')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(107, 106, 106);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Chazz Princeton</h4>
                            <img src="/static/images/product/11.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;"/>
                         </div>
                      </a>
                   </div>
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <button class="cyber_button" onclick="buyBooster('zane')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(1, 134, 112);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Zane Truesdale</h4>
                            <img src="/static/images/product/12.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;"/>
                         </div>
                      </a>
                   </div>
                   <div class="col-lg-3 col-sm-6 col-md-3">
-                     <a href="productpage.html">
+                     <a >
                         <div class="box-img">
+                           <button class="cyber_button" onclick="buyBooster('aster')">AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(255, 255, 255);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Aster Phoenix</h4>
                            <img src="/static/images/product/13.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;"/>
                         </div>

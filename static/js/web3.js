@@ -26,3 +26,16 @@ async function balance(user){
   
 }
 
+async function open_booster_pack(hero){
+  const ABI = [
+
+  ]
+  const ContractAddress = ""
+  let contract = new web3.eth.Contract(ABI, ContractAddress)
+  contract.methods._mint(hero).call().then( function(result){
+    window.alert(result)
+  })
+}
+async function buyBooster(hero){
+  window.alert(hero);
+}
