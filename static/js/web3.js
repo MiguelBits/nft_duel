@@ -159,6 +159,77 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
+                "internalType": "string",
+                "name": "_hero",
+                "type": "string"
+            }
+        ],
+        "name": "getRandomCard",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "stars",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "attack",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "defense",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "typeofCard",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "element",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "class",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "rarity",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "amount_available",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Duel_NFTs.Card",
+                "name": "obtained_card",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
                 "name": "owner",
                 "type": "address"
