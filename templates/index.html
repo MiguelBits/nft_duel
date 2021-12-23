@@ -56,7 +56,7 @@
                               <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
                               <ul>
                                 <!-- LOGIN BUTTON WITH METAMASK -->
-                                <button onclick="login()" class="mx-auto rounded-md p-2 bg-purple-500 text-white underline decoration-double" >
+                                <button id="login-button" class="mx-auto rounded-md p-2 bg-purple-500 text-white underline decoration-double" >
                                     Enable Web3
                                 </button>
                               </ul>
@@ -73,6 +73,8 @@
                         <div class="nav-b hidden-xs">
                            <div class="nav-box">
                               <ul>
+                                 <li><a style="font-weight: bold;" href="howitworks.html">Cards: </a></li>
+                                 <button><a style="font-weight: bold; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" id="cards" >?</a></button>
                                  <li><a style="font-weight: bold;" href="howitworks.html">Balance: </a></li>
                                  <button><a style="font-weight: bold; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" id="balance" >?</a></button>
                               </ul>
@@ -96,8 +98,8 @@
                </div>
                <div class="modal-body">
                   <ul>
-                     <li><a href="#" onclick="buyToken()" id="buyTokenEth"><img src="/static/images/flag-up-1.png" alt="" /> Ethereum</a></li>
-                     <li><a href="#" id="buyTokenBtc"><img src="/static/images/flag-up-2.png" alt="" /> Bitcoin </a></li>
+                     <li><a href="#" ><img src="/static/images/flag-up-1.png" alt="" /> Ethereum</a></li>
+                     <li><a href="#" ><img src="/static/images/flag-up-2.png" alt="" /> Bitcoin </a></li>
                   </ul>
                </div>
             </div>
@@ -148,7 +150,7 @@
                         <div class="box-img">
                            <link rel="preconnect" href="https://fonts.gstatic.com"> 
                            <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-                           <button class="cyber_button" onclick="buyBooster('yugi')">AVAILABLE NOW</button>
+                           <button id="yugi" class="cyber_button" >AVAILABLE NOW</button>
                            <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(143, 16, 54);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Yugi Muto</h4>
                            <img class="boosters" src="/static/images/product/1.png" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;" />
                         </div>
