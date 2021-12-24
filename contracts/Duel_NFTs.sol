@@ -1,19 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol";
+
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "https://github.com/smartcontractkit/chainlink/blob/develop/contracts/src/v0.8/VRFConsumerBase.sol";
 
-contract Duel_NFTs is ERC721, VRFConsumerBase{
+contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
 
     uint256 private _tokenCounter;
 
+    //events that trigger randomness functions
+    event requestedRandom(bytes32 indexed requestId, uint256 indexed tokenId); 
+    event CreatedUnfinishedRandom(uint256 indexed tokenId, uint256 randomNumber);    
     //chainlink randomness vars
     bytes32 internal keyHash;
     uint fee;
     uint randomResult;
     mapping(bytes32 => address) public requestIdToSender;
     mapping(bytes32 => string) public requestIdToTokenURI;
+    //Card associated with a tokenId
     mapping(uint256 => Card) public tokenIdToCard;
+    mapping(bytes32 => uint256) public requestIdToTokenId;
+    mapping(uint256 => uint256) public tokenIdToRandomNumber;
+    
 
     struct Card{
         string name;
@@ -60,22 +68,19 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
     function getCard_From_Yugi(uint _id) internal view returns(Card memory){
         return yugi_deck[_id];
     }
-    //KAIBA
+    //KAIBA\\
     Card[] kaiba_deck;
     function getCard_From_Kaiba(uint _id) internal view returns(Card memory){
         return kaiba_deck[_id];
     }
-    //all cards minted by id
-    mapping(uint => Card) private cards_everywhere;
 
 
-    constructor (address _VRFCoordinator, address _LinkToken, bytes32 _keyHash) 
-    public 
+    constructor (address _VRFCoordinator, address _LinkToken, bytes32 _keyHash)  
     VRFConsumerBase(_VRFCoordinator,_LinkToken)
     ERC721("Duel Cards","DM"){
         
-        keyHash = _keyHash
-        fee = 0.1*10**18;
+        keyHash = _keyHash;
+        fee = 0.1*10**18; //chainlink gas fee of 0.1LINK
 
         create_Yugi_Deck();
         //no of cards in deployed in the blockchain
@@ -83,41 +88,53 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
     }
 
     //mint token
-    function createCollectible(string memory _hero) public returns(uint256){
+    function create() public returns(bytes32 requestId){
         //kick off randomness from oracle
-        bytes32 requestId = requestRandomness(keyHash, fee);
+        requestId = requestRandomness(keyHash, fee);
+        
         requestIdToSender[requestId] = msg.sender;
-        requestIdToTokenURI[requestId] = tokenURI;
-        //map card to and id on chain
-        cards_everywhere[newItemId] = getRandomCard(_hero);
+        uint256 tokenId = _tokenCounter; 
+        requestIdToTokenId[requestId] = tokenId;
+
+        _tokenCounter++;      
+
+        emit requestedRandom(requestId, tokenId);
+
+    }
+    function finishMint(uint256 tokenId) public {
+        require(bytes(tokenURI(tokenId)).length <= 0, "tokenURI is already set!"); 
+        require(_tokenCounter > tokenId, "TokenId has not been minted yet!");
+        require(tokenIdToRandomNumber[tokenId] > 0, "Need to wait for the Chainlink node to respond!");
+
+        uint256 randomNumber = tokenIdToRandomNumber[tokenId];
+        Card memory randCard = getCard_From_Yugi(randomNumber);
+        tokenIdToCard[tokenId] = randCard;
+        
+        //function to use random Number
+
+        //_setTokenURI(tokenId, tokenURI);
 
     }
     function fulfillRandomness(bytes32 requestId, uint256 randomNumber) internal override {
         address cardOwner = requestIdToSender[requestId];
-        string memory tokenURI = requestIdToTokenURI[requestId];
-        
+        randomNumber = randomNumber % 10;
         //deploy/mint
-        uint256 newItemId = _tokenCounter;
-        _safeMint(cardOwner, newItemId);
-        _setTokenURI(newItemId,tokenURI);
-        _tokenCounter++;
+        uint256 tokenId = requestIdToTokenId[requestId];
+        _safeMint(cardOwner, tokenId);
+        tokenIdToRandomNumber[tokenId] = randomNumber;
 
-        Card randCard = getCard_From_Yugi(randomNumber % 10);
-        tokenIdToCard[newItemId] = randCard;
+        emit CreatedUnfinishedRandom(tokenId, randomNumber);
     }
 
-    //get random card from booster deck
-    function getRandomCard(string memory _hero) internal view returns(Card memory obtained_card){
-        Card memory randCard;
-        //if string equals _hero
-        if(keccak256(bytes(_hero)) == keccak256(bytes("Yugi"))){
-            randCard = getCard_From_Yugi(random());
-        }
-        if(keccak256(bytes(_hero)) == keccak256(bytes("Kaiba"))){
-            randCard = getCard_From_Kaiba(random());
-        }
-        
+    function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "ERC721: transfer caller is not owner nor approved"
+        );
+        _setTokenURI(tokenId, _tokenURI);
     }
+
+
     //returns random number 0-10
     function random() internal view returns (uint) {
         uint randomnumber = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % 10;
@@ -125,6 +142,6 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
         return randomnumber;
     }
     function getCard(uint _id) public view returns(string memory){
-        return cards_everywhere[_id].name;
+        return tokenIdToCard[_id].name;
     }
 }
