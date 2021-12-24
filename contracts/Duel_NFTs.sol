@@ -1,10 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol";
+import "https://github.com/smartcontractkit/chainlink/blob/develop/contracts/src/v0.8/VRFConsumerBase.sol";
 
-contract Duel_NFTs is ERC721{
+contract Duel_NFTs is ERC721, VRFConsumerBase{
+
     uint256 private _tokenCounter;
-  
+
+    //chainlink randomness vars
+    bytes32 internal keyHash;
+    uint fee;
+    uint randomResult;
+    mapping(bytes32 => address) public requestIdToSender;
+    mapping(bytes32 => string) public requestIdToTokenURI;
+    mapping(uint256 => Card) public tokenIdToCard;
+
     struct Card{
         string name;
         uint stars;
@@ -50,12 +60,23 @@ contract Duel_NFTs is ERC721{
     function getCard_From_Yugi(uint _id) internal view returns(Card memory){
         return yugi_deck[_id];
     }
-
+    //KAIBA
+    Card[] kaiba_deck;
+    function getCard_From_Kaiba(uint _id) internal view returns(Card memory){
+        return kaiba_deck[_id];
+    }
     //all cards minted by id
     mapping(uint => Card) private cards_everywhere;
 
 
-    constructor () ERC721("Duel Cards","DM"){
+    constructor (address _VRFCoordinator, address _LinkToken, bytes32 _keyHash) 
+    public 
+    VRFConsumerBase(_VRFCoordinator,_LinkToken)
+    ERC721("Duel Cards","DM"){
+        
+        keyHash = _keyHash
+        fee = 0.1*10**18;
+
         create_Yugi_Deck();
         //no of cards in deployed in the blockchain
         _tokenCounter = 0;
@@ -63,34 +84,47 @@ contract Duel_NFTs is ERC721{
 
     //mint token
     function createCollectible(string memory _hero) public returns(uint256){
-        uint256 newItemId = _tokenCounter;
+        //kick off randomness from oracle
+        bytes32 requestId = requestRandomness(keyHash, fee);
+        requestIdToSender[requestId] = msg.sender;
+        requestIdToTokenURI[requestId] = tokenURI;
         //map card to and id on chain
         cards_everywhere[newItemId] = getRandomCard(_hero);
-        //deploy/mint
-        _safeMint(msg.sender, newItemId);
+
+    }
+    function fulfillRandomness(bytes32 requestId, uint256 randomNumber) internal override {
+        address cardOwner = requestIdToSender[requestId];
+        string memory tokenURI = requestIdToTokenURI[requestId];
         
+        //deploy/mint
+        uint256 newItemId = _tokenCounter;
+        _safeMint(cardOwner, newItemId);
+        _setTokenURI(newItemId,tokenURI);
         _tokenCounter++;
 
-        return newItemId;
+        Card randCard = getCard_From_Yugi(randomNumber % 10);
+        tokenIdToCard[newItemId] = randCard;
     }
 
     //get random card from booster deck
-    function getRandomCard(string memory _hero) public view returns(Card memory obtained_card){
+    function getRandomCard(string memory _hero) internal view returns(Card memory obtained_card){
+        Card memory randCard;
         //if string equals _hero
         if(keccak256(bytes(_hero)) == keccak256(bytes("Yugi"))){
-            Card memory randCard = getCard_From_Yugi(random());
-            //calculate rarity with randomness
-            //if random between 0-10 is bigger or equal to card rarity 
-            if(random() >= randCard.rarity){
-                return randCard;
-            }
-            else return getRandomCard("Yugi");
+            randCard = getCard_From_Yugi(random());
         }
+        if(keccak256(bytes(_hero)) == keccak256(bytes("Kaiba"))){
+            randCard = getCard_From_Kaiba(random());
+        }
+        
     }
     //returns random number 0-10
     function random() internal view returns (uint) {
         uint randomnumber = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % 10;
         
         return randomnumber;
+    }
+    function getCard(uint _id) public view returns(string memory){
+        return cards_everywhere[_id].name;
     }
 }
