@@ -88,7 +88,7 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
     }
 
     //mint token
-    function create() public returns(bytes32 requestId){
+    function openBooster() public returns(bytes32 requestId){
         //kick off randomness from oracle
         requestId = requestRandomness(keyHash, fee);
         
@@ -134,13 +134,6 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
         _setTokenURI(tokenId, _tokenURI);
     }
 
-
-    //returns random number 0-10
-    function random() internal view returns (uint) {
-        uint randomnumber = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % 10;
-        
-        return randomnumber;
-    }
     function getCard(uint _id) public view returns(string memory){
         return tokenIdToCard[_id].name;
     }

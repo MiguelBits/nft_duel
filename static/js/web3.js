@@ -2,7 +2,23 @@ let web3 = new Web3(Web3.givenProvider);
 //CTRL + SHIFT + [ to hide variable
 var duel_nfts_abi = [
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_VRFCoordinator",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_LinkToken",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_keyHash",
+                "type": "bytes32"
+            }
+        ],
         "stateMutability": "nonpayable",
         "type": "constructor"
     },
@@ -61,6 +77,25 @@ var duel_nfts_abi = [
         "inputs": [
             {
                 "indexed": true,
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "randomNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "CreatedUnfinishedRandom",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
                 "internalType": "address",
                 "name": "from",
                 "type": "address"
@@ -79,6 +114,25 @@ var duel_nfts_abi = [
             }
         ],
         "name": "Transfer",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "requestId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            }
+        ],
+        "name": "requestedRandom",
         "type": "event"
     },
     {
@@ -119,21 +173,28 @@ var duel_nfts_abi = [
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_hero",
-                "type": "string"
-            }
-        ],
-        "name": "createCollectible",
+        "inputs": [],
+        "name": "create",
         "outputs": [
             {
+                "internalType": "bytes32",
+                "name": "requestId",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
-                "name": "",
+                "name": "tokenId",
                 "type": "uint256"
             }
         ],
+        "name": "finishMint",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -159,69 +220,17 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
-                "internalType": "string",
-                "name": "_hero",
-                "type": "string"
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
             }
         ],
-        "name": "getRandomCard",
+        "name": "getCard",
         "outputs": [
             {
-                "components": [
-                    {
-                        "internalType": "string",
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "stars",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "attack",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "defense",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "typeofCard",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "element",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "class",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "description",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "rarity",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "amount_available",
-                        "type": "uint256"
-                    }
-                ],
-                "internalType": "struct Duel_NFTs.Card",
-                "name": "obtained_card",
-                "type": "tuple"
+                "internalType": "string",
+                "name": "",
+                "type": "string"
             }
         ],
         "stateMutability": "view",
@@ -278,6 +287,81 @@ var duel_nfts_abi = [
                 "internalType": "address",
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "requestId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "uint256",
+                "name": "randomness",
+                "type": "uint256"
+            }
+        ],
+        "name": "rawFulfillRandomness",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "name": "requestIdToSender",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "name": "requestIdToTokenId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "name": "requestIdToTokenURI",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
             }
         ],
         "stateMutability": "view",
@@ -355,6 +439,24 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_tokenURI",
+                "type": "string"
+            }
+        ],
+        "name": "setTokenURI",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "bytes4",
                 "name": "interfaceId",
                 "type": "bytes4"
@@ -379,6 +481,89 @@ var duel_nfts_abi = [
                 "internalType": "string",
                 "name": "",
                 "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenIdToCard",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stars",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "attack",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "defense",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "typeofCard",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "element",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "class",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "rarity",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount_available",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenIdToRandomNumber",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -427,7 +612,7 @@ var duel_nfts_abi = [
         "type": "function"
     }
 ]
-const duel_nfts_Address = "0x1E5948764378ec79BF9322A3e7391Dd9102a6834"
+const duel_nfts_Address = "0x842910db0bFb12CF444f567D988333EA4bb6D3aa"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
 
@@ -470,10 +655,33 @@ async function open_booster_pack(_hero){
     'nonce': nonce,
     'gas': 5000000,
     'maxPriorityFeePerGas': 1999999987,
-    'data': nftContract.methods.createCollectible(_hero).encodeABI()
+    'data': nftContract.methods.create().encodeABI()
   };
   const transactionReceipt = await web3.eth.sendTransaction(tx);
- 
+  
+  //nftContract.getPastEvents('requestedRandom',{}).then(result => console.log(result[0].returnValues.tokenId));
+  let tokenId = Number(document.getElementById("cards").innerHTML);
+  
+  finish_mint_card(tokenId)
+}
+
+async function finish_mint_card(tokenId){
+
+    //console.log(tokenId)
+
+    const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
+
+    //the transaction
+    const tx = {
+      'from': user,
+      'to': duel_nfts_Address,
+      'nonce': nonce,
+      'gas': 5000000,
+      'maxPriorityFeePerGas': 1999999987,
+      'data': nftContract.methods.finishMint(tokenId).encodeABI()
+    };
+    const transactionReceipt = await web3.eth.sendTransaction(tx)
+    
 }
 
 //show cards next to balance
