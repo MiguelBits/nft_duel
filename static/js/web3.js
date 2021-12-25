@@ -173,19 +173,6 @@ var duel_nfts_abi = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "create",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "requestId",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -274,6 +261,19 @@ var duel_nfts_abi = [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "openBooster",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "requestId",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -351,25 +351,6 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "name": "requestIdToTokenURI",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "address",
                 "name": "from",
                 "type": "address"
@@ -432,24 +413,6 @@ var duel_nfts_abi = [
             }
         ],
         "name": "setApprovalForAll",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "_tokenURI",
-                "type": "string"
-            }
-        ],
-        "name": "setTokenURI",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -612,9 +575,13 @@ var duel_nfts_abi = [
         "type": "function"
     }
 ]
-const duel_nfts_Address = "0x842910db0bFb12CF444f567D988333EA4bb6D3aa"
+const duel_nfts_Address = "0xCa76eD3d5bf9A383F1bBa8000EBAC2D72c0112E0"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
+
+
+                            // Functions below \\
+sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 async function login() {
   //login method
@@ -655,19 +622,22 @@ async function open_booster_pack(_hero){
     'nonce': nonce,
     'gas': 5000000,
     'maxPriorityFeePerGas': 1999999987,
-    'data': nftContract.methods.create().encodeABI()
+    'data': nftContract.methods.openBooster().encodeABI()
   };
   const transactionReceipt = await web3.eth.sendTransaction(tx);
   
-  //nftContract.getPastEvents('requestedRandom',{}).then(result => console.log(result[0].returnValues.tokenId));
+  //this is bugged because I need to wait chainlink response???
+  await sleep(60000); // Sleep 1000 milliseconds (1 second)
+  nftContract.getPastEvents('requestedRandom',{}).then(result => finish_mint_card(Number(result[0].returnValues.tokenId)));
   let tokenId = Number(document.getElementById("cards").innerHTML);
   
   finish_mint_card(tokenId)
+  
 }
 
 async function finish_mint_card(tokenId){
 
-    //console.log(tokenId)
+    console.log(tokenId)
 
     const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
 
@@ -681,9 +651,13 @@ async function finish_mint_card(tokenId){
       'data': nftContract.methods.finishMint(tokenId).encodeABI()
     };
     const transactionReceipt = await web3.eth.sendTransaction(tx)
-    
+    printCard(tokenId);
 }
-
+async function printCard(tokenId){
+    nftContract.methods.getCard(tokenId).call().then(function(result){
+        window.alert("You obtained a new card : "+result+" !")
+      });
+}
 //show cards next to balance
 async function duel_nfts_amount(){
   nftContract.methods.balanceOf(user).call().then(function(result){
