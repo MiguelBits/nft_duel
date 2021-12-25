@@ -628,7 +628,7 @@ async function open_booster_pack(_hero){
   
   //this is bugged because I need to wait chainlink response???
   await sleep(60000); // Sleep 1000 milliseconds (1 second)
-  nftContract.getPastEvents('requestedRandom',{}).then(result => finish_mint_card(Number(result[0].returnValues.tokenId)));
+  //nftContract.getPastEvents('requestedRandom',{}).then(result => finish_mint_card(Number(result[0].returnValues.tokenId)));
   let tokenId = Number(document.getElementById("cards").innerHTML);
   
   finish_mint_card(tokenId)
