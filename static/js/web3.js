@@ -665,25 +665,33 @@ async function duel_nfts_amount(){
   });
 }
 //create mint button in collections
-async function display_mint_packages(){
-    duplicate("")
-
-    for(let i=1;i<3;i++){
-        console.log(i)
+var nft_balancer_packs = getNFT_collection();
+function display_mint_packages(){
+    for(let i=0;i<nft_balancer_packs.length-1;i++){
         duplicate(i)
     }
 }
 //duplicate button
-function duplicate(what) {
-    var i = 0;
-    var original = document.getElementById('mint_package'+what);
+async function duplicate(i) {
+    let original;
+    if(i==0){
+        original = document.getElementById('mint_package');
+    }
+    else{
+        original = document.getElementById('mint_package'+i);
+    }  
 
-    var clone = original.cloneNode(true); // "deep" clone
+    let clone = original.cloneNode(true); // "deep" clone
+    nftContract.methods.getCard(i).call().then(function(result){
+        clone.innerHTML += result
+    })
     clone.id = "mint_package" + ++i;
-    // or clone.id = ""; if the divs don't need an ID
     original.parentNode.appendChild(clone);
 }
-
+//get nfts from blockchain
+function getNFT_collection(){
+    return [1,2,3,4]
+}
 
 //loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
