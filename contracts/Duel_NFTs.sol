@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol";
 import "https://github.com/smartcontractkit/chainlink/blob/develop/contracts/src/v0.8/VRFConsumerBase.sol";
 
-contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
+contract Duel_NFTs is ERC721, VRFConsumerBase{
 
     uint256 private _tokenCounter;
 
@@ -16,7 +16,6 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
     uint fee;
     uint randomResult;
     mapping(bytes32 => address) public requestIdToSender;
-    mapping(bytes32 => string) public requestIdToTokenURI;
     //Card associated with a tokenId
     mapping(uint256 => Card) public tokenIdToCard;
     mapping(bytes32 => uint256) public requestIdToTokenId;
@@ -35,6 +34,7 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
         uint rarity;
         uint amount_available;
     }
+
     //YUGI
     Card[] yugi_deck;
     function create_Yugi_Deck() internal{
@@ -104,7 +104,6 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
 
     }
     function finishMint(uint256 tokenId) public {
-        require(bytes(tokenURI(tokenId)).length <= 0, "tokenURI is already set!"); 
         require(_tokenCounter > tokenId, "TokenId has not been minted yet!");
         require(tokenIdToRandomNumber[tokenId] > 0, "Need to wait for the Chainlink node to respond!");
 
@@ -113,8 +112,6 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
         tokenIdToCard[tokenId] = randCard;
         
         //function to use random Number
-
-        //_setTokenURI(tokenId, tokenURI);
 
     }
     function fulfillRandomness(bytes32 requestId, uint256 randomNumber) internal override {
@@ -128,15 +125,11 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
         emit CreatedUnfinishedRandom(tokenId, randomNumber);
     }
 
-    function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: transfer caller is not owner nor approved"
-        );
-        _setTokenURI(tokenId, _tokenURI);
-    }
-
     function getCard(uint _id) public view returns(string memory){
         return tokenIdToCard[_id].name;
+    }
+    function getCardsAtAddress(address user)public view returns(uint[] memory array){
+        array = cardsAtAddress[user];
+        return array;
     }
 }

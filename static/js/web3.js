@@ -394,25 +394,6 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "name": "requestIdToTokenURI",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "address",
                 "name": "from",
                 "type": "address"
@@ -475,24 +456,6 @@ var duel_nfts_abi = [
             }
         ],
         "name": "setApprovalForAll",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "_tokenURI",
-                "type": "string"
-            }
-        ],
-        "name": "setTokenURI",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -655,10 +618,9 @@ var duel_nfts_abi = [
         "type": "function"
     }
 ]
-const duel_nfts_Address = "0xA98AeFaB9f7FaFeCD5f11c85215A96b87e7CbacF"
+const duel_nfts_Address = "0xdAeD677DFC0b9f2cDCB686a59C17e8d6d72240c1"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
-
 
                             // Functions below \\
 sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -674,9 +636,13 @@ async function login() {
     //display and fetch balance of current user
     balance();
     duel_nfts_amount();
-    //console.log(user)
+    document.getElementById("login-button").style.display = "none"
   })
   
+}
+async function refresh(){
+    display_mint_packages();
+    document.getElementById("refresh-button").style.display = "none"
 }
 
 async function balance(){
@@ -705,14 +671,7 @@ async function open_booster_pack(_hero){
     'data': nftContract.methods.openBooster().encodeABI()
   };
   const transactionReceipt = await web3.eth.sendTransaction(tx);
-  
-  //this is bugged because I need to wait chainlink response???
-  await sleep(60000); // Sleep 1000 milliseconds (1 second)
-  //nftContract.getPastEvents('requestedRandom',{}).then(result => finish_mint_card(Number(result[0].returnValues.tokenId)));
-  let tokenId = Number(document.getElementById("cards").innerHTML);
-  
-  //finish_mint_card(tokenId)
-  
+ 
 }
 
 async function finish_mint_card(tokenId){
@@ -745,15 +704,19 @@ async function duel_nfts_amount(){
   });
 }
 //create mint button in collections
-var nft_balancer_packs = [1,2,3,4]
 
-function display_mint_packages(){
-    for(let i=0;i<nft_balancer_packs.length-1;i++){
+async function display_mint_packages(){
+    let i = 0;
+    let lengthOfCollection = document.getElementById("cards").innerHTML;
+    //console.log(lengthOfCollection);
+    for(i;i<lengthOfCollection-1;i++){
         duplicate(i)
     }
+    
 }
 //duplicate button
 async function duplicate(i) {
+
     let original;
     if(i==0){
         original = document.getElementById('mint_package');
@@ -768,18 +731,26 @@ async function duplicate(i) {
     })
     clone.id = "mint_package" + ++i;
     original.parentNode.appendChild(clone);
+    
 }
 //get nfts from blockchain
-function getNFT_collection(){
-    nftContract.methods.getCardsAtAddress(user).call().then(function(result){
+async function getNFT_collection(){
+    await nftContract.methods.getCardsAtAddress(user).call().then(function(result){
         console.log(result)
       });
 }
 
 //loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
-document.getElementById("login-button").addEventListener("click", login);
+var myButton = document.getElementById("login-button");
+    if(myButton){
+        document.getElementById("login-button").addEventListener("click", login);
+    }
+    else{
+        login()
+        document.getElementById("refresh-button").addEventListener("click", refresh);
+    }
+
 document.getElementById("cyber_button_collections").addEventListener("click", finish_mint_card);
 
-display_mint_packages();
 
