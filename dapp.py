@@ -9,9 +9,10 @@ def index():
    
    return render_template("index.html")
 
-@app.route('/collection')
-def collection_page():
-   return render_template("collection.html")
+@app.route('/collections',methods = ['POST', 'GET'])
+def collections():
+   
+   return render_template("collections.html")
 
 if __name__ == '__main__':
    app.run()
