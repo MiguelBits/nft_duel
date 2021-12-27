@@ -55,10 +55,6 @@
                               <!-- Tailwind css -->
                               <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
                               <ul>
-                                <!-- LOGIN BUTTON WITH METAMASK -->
-                                <button id="refresh-button" class="mx-auto rounded-md p-2 bg-purple-500 text-white underline decoration-double" >
-                                    Load Web3
-                                </button>
                               </ul>
                            </div>
                            
@@ -66,7 +62,7 @@
                            <div class="help-box">
                               <ul>
                                  <li> <a data-toggle="modal" data-target="#myModal"  href="#"><img src="/static/images/flag.png" style="margin-bottom: -9px; width: 3em;height: 2em;"> </a> </li>
-                                 <li> <a href="/collections"> <span>Collections</span> <img src="images/flag.png" alt="" /> </a> </li>
+                                 <li> <a href="/"> <span>Home</span> </a> </li>
                                </ul>
                            </div>
                         </div>
@@ -117,11 +113,10 @@
          </ul>
       </div>
       <div class="col-lg-3 col-sm-6 col-md-3">
-         <a>
+         <a id="collection-section" style="display: none">
             <div id="mint_package" class="box-img-collections" style="margin-top: 25px; color:white; text-align: center;">
-               <button id="cyber_button_collections"  class="cyber_button_collections" >FINISH MINT</button>
+               <button id="cyber_button_collections" class="cyber_button_collections" >FINISH MINT</button>
                <h4 style="font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(143, 16, 54);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)">Duel Monster</h4>
-               <img class="boosters" src="/static/images/product/cardback.jpg" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />
             </div>
 
          </a>
@@ -135,7 +130,8 @@
                   <div class="categories_link">
                      <br>
                      <br>
-                     <a href="/">Browse all Booster Packs here</a>
+                     
+                     <button class="mx-auto rounded-md p-2 bg-purple-500 text-white underline decoration-double" id="refresh-button">Browse all Booster Packs here</button>
                   </div>
                </div>
             </div>

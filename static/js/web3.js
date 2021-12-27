@@ -624,7 +624,7 @@ var user;
 
                             // Functions below \\
 sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-
+//conections to web3\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 async function login() {
   //login method
   ethereum.request({ method: 'eth_requestAccounts' });
@@ -656,7 +656,7 @@ async function balance(){
   
 }
 
-//create/mint nft
+//create/mint nft\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 function open_booster_pack_Yugi(){open_booster_pack("Yugi")}
 async function open_booster_pack(_hero){
   const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
@@ -703,12 +703,14 @@ async function duel_nfts_amount(){
     document.getElementById("cards").innerHTML = result;
   });
 }
-//create mint button in collections
+//create mint button in collections\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 async function display_mint_packages(){
     let i = 0;
     let lengthOfCollection = document.getElementById("cards").innerHTML;
+    
     //console.log(lengthOfCollection);
+    
     for(i;i<lengthOfCollection-1;i++){
         duplicate(i)
     }
@@ -720,6 +722,7 @@ async function duplicate(i) {
     let original;
     if(i==0){
         original = document.getElementById('mint_package');
+        document.getElementById('collection-section').style.display = "block";
     }
     else{
         original = document.getElementById('mint_package'+i);
@@ -728,6 +731,10 @@ async function duplicate(i) {
     let clone = original.cloneNode(true); // "deep" clone
     nftContract.methods.getCard(i).call().then(function(result){
         clone.innerHTML += result
+        //idk but this needs to stay :)
+        if(result = ''){
+            
+        }
     })
     clone.id = "mint_package" + ++i;
     original.parentNode.appendChild(clone);
@@ -751,6 +758,6 @@ var myButton = document.getElementById("login-button");
         document.getElementById("refresh-button").addEventListener("click", refresh);
     }
 
-document.getElementById("cyber_button_collections").addEventListener("click", finish_mint_card);
+
 
 
