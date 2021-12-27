@@ -175,6 +175,30 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "cardsAtAddress",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "tokenId",
                 "type": "uint256"
@@ -218,6 +242,25 @@ var duel_nfts_abi = [
                 "internalType": "string",
                 "name": "",
                 "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getCardsAtAddress",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "array",
+                "type": "uint256[]"
             }
         ],
         "stateMutability": "view",
@@ -351,6 +394,25 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "name": "requestIdToTokenURI",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
                 "name": "from",
                 "type": "address"
@@ -413,6 +475,24 @@ var duel_nfts_abi = [
             }
         ],
         "name": "setApprovalForAll",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_tokenURI",
+                "type": "string"
+            }
+        ],
+        "name": "setTokenURI",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -575,7 +655,7 @@ var duel_nfts_abi = [
         "type": "function"
     }
 ]
-const duel_nfts_Address = "0xCa76eD3d5bf9A383F1bBa8000EBAC2D72c0112E0"
+const duel_nfts_Address = "0xA98AeFaB9f7FaFeCD5f11c85215A96b87e7CbacF"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
 
@@ -665,7 +745,8 @@ async function duel_nfts_amount(){
   });
 }
 //create mint button in collections
-var nft_balancer_packs = getNFT_collection();
+var nft_balancer_packs = [1,2,3,4]
+
 function display_mint_packages(){
     for(let i=0;i<nft_balancer_packs.length-1;i++){
         duplicate(i)
@@ -690,7 +771,9 @@ async function duplicate(i) {
 }
 //get nfts from blockchain
 function getNFT_collection(){
-    return [1,2,3,4]
+    nftContract.methods.getCardsAtAddress(user).call().then(function(result){
+        console.log(result)
+      });
 }
 
 //loading functions to html

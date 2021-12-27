@@ -11,8 +11,3 @@ _LinkToken:
 
 _keyHash:
 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4
-
-                           <button class='cyber_button' onclick='buyBooster('kaiba')'>AVAILABLE NOW</button>
-                           <h4 style='font-weight: bolder;border-bottom-width: 13px;border-bottom-color: rgb(88, 220, 243);background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent)'>Seto Kaiba</h4>
-                           <img src='/static/images/product/2.png' alt='' style='max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: -13%;'/>
-  

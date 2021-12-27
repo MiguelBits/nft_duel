@@ -21,7 +21,7 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
     mapping(uint256 => Card) public tokenIdToCard;
     mapping(bytes32 => uint256) public requestIdToTokenId;
     mapping(uint256 => uint256) public tokenIdToRandomNumber;
-    
+    mapping(address => uint[]) public cardsAtAddress;
 
     struct Card{
         string name;
@@ -97,6 +97,8 @@ contract Duel_NFTs is ERC721URIStorage, VRFConsumerBase{
         requestIdToTokenId[requestId] = tokenId;
 
         _tokenCounter++;      
+
+        cardsAtAddress[msg.sender].push(tokenId);
 
         emit requestedRandom(requestId, tokenId);
 
