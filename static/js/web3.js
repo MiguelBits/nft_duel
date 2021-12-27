@@ -664,6 +664,19 @@ async function duel_nfts_amount(){
     document.getElementById("cards").innerHTML = result;
   });
 }
+//create mint button in collections
+function createButtons() { 
+    for(i = 0; i < 11; i++) {
+      var button = document.createElement("<button type=\"button\" class=\"btn btn-outline-success\">Chapter[i]</button>");
+      var buttonDiv = document.getElementById("buttons");
+      buttonDiv.appendChild(button);
+    }
+  }
 
+
+
+//loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
 document.getElementById("login-button").addEventListener("click", login);
+const collections = document.querySelector("")
+document.getElementById("mint_package").addEventListener("load", createButtons);
