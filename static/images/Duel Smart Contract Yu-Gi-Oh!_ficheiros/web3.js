@@ -631,7 +631,7 @@ async function open_booster_pack(_hero){
   //nftContract.getPastEvents('requestedRandom',{}).then(result => finish_mint_card(Number(result[0].returnValues.tokenId)));
   let tokenId = Number(document.getElementById("cards").innerHTML);
   
-  //finish_mint_card(tokenId)
+  finish_mint_card(tokenId)
   
 }
 
@@ -696,7 +696,6 @@ function getNFT_collection(){
 //loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
 document.getElementById("login-button").addEventListener("click", login);
-document.getElementById("cyber_button_collections").addEventListener("click", finish_mint_card);
 
 display_mint_packages();
 
