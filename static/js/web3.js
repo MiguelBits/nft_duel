@@ -665,18 +665,29 @@ async function duel_nfts_amount(){
   });
 }
 //create mint button in collections
-function createButtons() { 
-    for(i = 0; i < 11; i++) {
-      var button = document.createElement("<button type=\"button\" class=\"btn btn-outline-success\">Chapter[i]</button>");
-      var buttonDiv = document.getElementById("buttons");
-      buttonDiv.appendChild(button);
-    }
-  }
+async function display_mint_packages(){
+    duplicate("")
 
+    for(let i=1;i<3;i++){
+        console.log(i)
+        duplicate(i)
+    }
+}
+//duplicate button
+function duplicate(what) {
+    var i = 0;
+    var original = document.getElementById('mint_package'+what);
+
+    var clone = original.cloneNode(true); // "deep" clone
+    clone.id = "mint_package" + ++i;
+    // or clone.id = ""; if the divs don't need an ID
+    original.parentNode.appendChild(clone);
+}
 
 
 //loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
 document.getElementById("login-button").addEventListener("click", login);
-const collections = document.querySelector("")
-document.getElementById("mint_package").addEventListener("load", createButtons);
+
+display_mint_packages();
+
