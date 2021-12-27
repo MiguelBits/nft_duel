@@ -729,8 +729,10 @@ async function duplicate(i) {
     }  
 
     let clone = original.cloneNode(true); // "deep" clone
-    nftContract.methods.getCard(i).call().then(function(result){
-        clone.innerHTML += result
+    nftContract.methods.getCard(i).call().then(function(cardName){
+        let imgSrc = cardName;
+        clone.innerHTML += imgSrc
+        console.log(imgSrc)
         //idk but this needs to stay :)
         if(result = ''){
             
@@ -740,13 +742,6 @@ async function duplicate(i) {
     original.parentNode.appendChild(clone);
     
 }
-//get nfts from blockchain
-async function getNFT_collection(){
-    await nftContract.methods.getCardsAtAddress(user).call().then(function(result){
-        console.log(result)
-      });
-}
-
 //loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
 var myButton = document.getElementById("login-button");
