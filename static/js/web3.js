@@ -707,13 +707,12 @@ async function duel_nfts_amount(){
 
 async function display_mint_packages(){
     let i = 0;
-    let lengthOfCollection = document.getElementById("cards").innerHTML;
-    
-    //console.log(lengthOfCollection);
-    
-    for(i;i<lengthOfCollection-1;i++){
-        duplicate(i)
-    }
+    await nftContract.methods.balanceOf(user).call().then(function(lengthOfCollection){
+        for(i;i<lengthOfCollection-1;i++){
+            duplicate(i)
+        }
+        
+    });
     
 }
 //duplicate button
@@ -730,13 +729,12 @@ async function duplicate(i) {
 
     let clone = original.cloneNode(true); // "deep" clone
     nftContract.methods.getCard(i).call().then(function(cardName){
-        let imgSrc = cardName;
+        //get url from github
+        console.log(i)
+        let insertName = "" + cardName
+        insertName.replace(" ","%20")
+        let imgSrc = 'https://github.com/mcruzvas/nft_duel/blob/main/static/images/product/cards/'+insertName+'.jpg';
         clone.innerHTML += imgSrc
-        console.log(imgSrc)
-        //idk but this needs to stay :)
-        if(result = ''){
-            
-        }
     })
     clone.id = "mint_package" + ++i;
     original.parentNode.appendChild(clone);
