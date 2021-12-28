@@ -742,7 +742,7 @@ async function duplicate(i) {
             //unminted
             if(cardName == ""){
                 let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cardback.jpg"
-                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 12%;" />'
 
             }
             //minted
@@ -763,14 +763,19 @@ async function duplicate(i) {
 //loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
 var myButton = document.getElementById("login-button");
-    if(myButton){
-        document.getElementById("login-button").addEventListener("click", login);
-    }
-    else{
-        login()
-        document.getElementById("refresh-button").addEventListener("click", refresh);
-    }
+if(myButton){
+    document.getElementById("login-button").addEventListener("click", login);
+}
+else{
+    login()
+    document.getElementById("refresh-button").addEventListener("click", refresh);
+}
 
-
+var mycollectionScroll = document.getElementById("wrapper")
+if(mycollectionScroll){
+    mycollectionScroll.onscroll = function() {
+        wrapper1.scrollLeft = wrapper2.scrollLeft;
+      };
+}
 
 

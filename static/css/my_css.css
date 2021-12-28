@@ -175,3 +175,18 @@
       transform: translate(0);
     }
   }
+#cards_scroll{
+  overflow: auto;
+  white-space: nowrap;
+  width: 100%;
+  height: 500px;
+}
+
+#cards_scroll a{
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  
+}
