@@ -48,10 +48,10 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
         yugi_deck.push(Card("Black Luster Soldier",8,3000,2500,"ritual","earth","warrior"," You can Ritual Summon this card with 'Black Luster Ritual'. ",8,5));
         //4 push Summoned Skull
         yugi_deck.push(Card("Summoned Skull",6,2500,1200,"normal","dark","fiend","A fiend with dark powers for confusing the enemy. Among the Fiend-Type monsters, this monster boasts considerable force.",5,5));
-        //5 push Celtic Guardian
-        yugi_deck.push(Card("Celtic Guardian",4,1400,1200,"normal","earth","warrior","An elf who learned to wield a sword, he baffles enemies with lightning-swift attacks. ",2,10));
-        //6 push Winged Dragon, Guardian of the Fortress #1 
-        yugi_deck.push(Card("Winged Dragon, Guardian of the Fortress #1 ",4,1400,1200,"normal","wind","dragon"," A dragon commonly found guarding mountain fortresses. Its signature attack is a sweeping dive from out of the blue. ",3,10));
+        //5 push 
+
+        //6 push 
+
         //7 push Feral Imp
         yugi_deck.push(Card("Feral Imp",4,1300,1400,"normal","dark","fiend"," A playful little fiend that lurks in the dark, waiting to attack an unwary enemy. ",1,10));
         //8 push Monster Reborn

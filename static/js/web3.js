@@ -724,7 +724,7 @@ async function duplicate(i) {
         nftContract.methods.getCardsAtAddress(user).call().then(async function(cardArray){
             //    console.log(cardArray);
                 nftContract.methods.getCard(cardArray[0]).call().then(async function(cardName){
-                    let imgSrc = "https://github.com/mcruzvas/nft_duel/blob/main/static/images/product/cards/"+cardName+".jpg?raw=true"
+                    let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
 
                     original.innerHTML += cardName
                     original.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
@@ -740,6 +740,10 @@ async function duplicate(i) {
     //    console.log(cardArray);
         nftContract.methods.getCard(cardArray[i]).call().then(async function(cardName){
             clone.innerHTML += cardName
+            let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
+
+            clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+
         })
     });
     clone.id = "mint_package" + ++i;
