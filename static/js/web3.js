@@ -636,7 +636,6 @@ async function login() {
     //display and fetch balance of current user
     balance();
     duel_nfts_amount();
-    document.getElementById("login-button").style.display = "none"
   })
   
 }
@@ -722,20 +721,24 @@ async function duplicate(i) {
     if(i==0){
         original = document.getElementById('mint_package');
         document.getElementById('collection-section').style.display = "block";
+        nftContract.methods.getCardsAtAddress(user).call().then(async function(cardArray){
+            //    console.log(cardArray);
+                nftContract.methods.getCard(cardArray[0]).call().then(async function(cardName){
+                    original.innerHTML += cardName + 0
+                })
+            });
     }
     else{
         original = document.getElementById('mint_package'+i);
     }  
 
     let clone = original.cloneNode(true); // "deep" clone
-    nftContract.methods.getCard(i).call().then(function(cardName){
-        //get url from github
-        console.log(i)
-        let insertName = "" + cardName
-        insertName.replace(" ","%20")
-        let imgSrc = 'https://github.com/mcruzvas/nft_duel/blob/main/static/images/product/cards/'+insertName+'.jpg';
-        clone.innerHTML += imgSrc
-    })
+    nftContract.methods.getCardsAtAddress(user).call().then(async function(cardArray){
+    //    console.log(cardArray);
+        nftContract.methods.getCard(cardArray[i]).call().then(async function(cardName){
+            clone.innerHTML += cardName + i
+        })
+    });
     clone.id = "mint_package" + ++i;
     original.parentNode.appendChild(clone);
     
