@@ -1,3 +1,6 @@
+## Pre-Requisites
+Brownie, Truffle, Ganache, Python, Node.js (web3)
+
 ## My contract at Kovan Testnet
 0xdAeD677DFC0b9f2cDCB686a59C17e8d6d72240c1
 
