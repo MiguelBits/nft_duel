@@ -138,6 +138,75 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
+                "internalType": "enum Duel_NFTs.Heroes",
+                "name": "",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "HeroesDeck",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stars",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "attack",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "defense",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "typeofCard",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "element",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "class",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "rarity",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount_available",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
                 "name": "to",
                 "type": "address"
@@ -204,7 +273,20 @@ var duel_nfts_abi = [
                 "type": "uint256"
             }
         ],
-        "name": "finishMint",
+        "name": "finishMint_Kaiba",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            }
+        ],
+        "name": "finishMint_Yugi",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -618,7 +700,7 @@ var duel_nfts_abi = [
         "type": "function"
     }
 ]
-const duel_nfts_Address = "0xdAeD677DFC0b9f2cDCB686a59C17e8d6d72240c1"
+const duel_nfts_Address = "0x7d0d0bb6b2CE9D05F1B25c799C0DF411Eb8AF978"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
 
@@ -656,8 +738,7 @@ async function balance(){
 }
 
 //create/mint nft\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-function open_booster_pack_Yugi(){open_booster_pack("Yugi")}
-async function open_booster_pack(_hero){
+async function open_booster_pack(){
   const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
 
   //the transaction
@@ -673,8 +754,8 @@ async function open_booster_pack(_hero){
  
 }
 
-async function finish_mint_card(tokenId){
-
+async function open_booster_pack_Yugi(tokenId){
+    open_booster_pack();
     console.log(tokenId)
 
     const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
@@ -686,7 +767,25 @@ async function finish_mint_card(tokenId){
       'nonce': nonce,
       'gas': 5000000,
       'maxPriorityFeePerGas': 1999999987,
-      'data': nftContract.methods.finishMint(tokenId).encodeABI()
+      'data': nftContract.methods.finishMint_Yugi(tokenId).encodeABI()
+    };
+    const transactionReceipt = await web3.eth.sendTransaction(tx)
+    printCard(tokenId);
+}
+async function open_booster_pack_Kaiba(tokenId){
+    open_booster_pack();
+    console.log(tokenId)
+
+    const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
+
+    //the transaction
+    const tx = {
+      'from': user,
+      'to': duel_nfts_Address,
+      'nonce': nonce,
+      'gas': 5000000,
+      'maxPriorityFeePerGas': 1999999987,
+      'data': nftContract.methods.finishMint_Kaiba(tokenId).encodeABI()
     };
     const transactionReceipt = await web3.eth.sendTransaction(tx)
     printCard(tokenId);
@@ -761,7 +860,10 @@ async function duplicate(i) {
     
 }
 //loading functions to html
-document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
+document.getElementById("yugi").addEventListener("click", open_booster_pack);
+document.getElementById("kaiba").addEventListener("click", open_booster_pack_Kaiba);
+
+//login button
 var myButton = document.getElementById("login-button");
 if(myButton){
     document.getElementById("login-button").addEventListener("click", login);
