@@ -6,6 +6,13 @@ import "https://github.com/smartcontractkit/chainlink/blob/develop/contracts/src
 
 contract Duel_NFTs is ERC721, VRFConsumerBase{
 
+    modifier isMinted(uint tokenId){
+        require(_tokenCounter > tokenId, "TokenId has not been minted yet!");
+        require(tokenIdToRandomNumber[tokenId] > 0, "Need to wait for the Chainlink node to respond!");    
+        bytes memory card = bytes(getCard(tokenId));
+        require(card.length == 0);
+        _;
+    }
     uint256 private _tokenCounter;
 
     //events that trigger randomness functions
@@ -116,18 +123,16 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
     }
 
     //function to use random Number
-    function finishMint_Kaiba(uint256 tokenId) public{
-        require(_tokenCounter > tokenId, "TokenId has not been minted yet!");
-        require(tokenIdToRandomNumber[tokenId] > 0, "Need to wait for the Chainlink node to respond!");        
+    function finishMint_Kaiba(uint256 tokenId) public isMinted(tokenId){
+        
         uint256 randomNumber = tokenIdToRandomNumber[tokenId];
         
         Card memory randCard = kaiba_deck[randomNumber];
         tokenIdToCard[tokenId] = randCard;
 
     }
-    function finishMint_Yugi(uint256 tokenId) public{
-        require(_tokenCounter > tokenId, "TokenId has not been minted yet!");
-        require(tokenIdToRandomNumber[tokenId] > 0, "Need to wait for the Chainlink node to respond!");        
+    function finishMint_Yugi(uint256 tokenId) public isMinted(tokenId){
+       
         uint256 randomNumber = tokenIdToRandomNumber[tokenId];
         
         Card memory randCard = yugi_deck[randomNumber];
