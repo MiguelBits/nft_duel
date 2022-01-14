@@ -2,23 +2,7 @@ let web3 = new Web3(Web3.givenProvider);
 //CTRL + SHIFT + [ to hide variable
 var duel_nfts_abi = [
     {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_VRFCoordinator",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "_LinkToken",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "_keyHash",
-                "type": "bytes32"
-            }
-        ],
+        "inputs": [],
         "stateMutability": "nonpayable",
         "type": "constructor"
     },
@@ -138,75 +122,6 @@ var duel_nfts_abi = [
     {
         "inputs": [
             {
-                "internalType": "enum Duel_NFTs.Heroes",
-                "name": "",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "HeroesDeck",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "stars",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "attack",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "defense",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "typeofCard",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "element",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "class",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "description",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "rarity",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "amount_available",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "address",
                 "name": "to",
                 "type": "address"
@@ -269,24 +184,11 @@ var duel_nfts_abi = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "tokenId",
+                "name": "i",
                 "type": "uint256"
             }
         ],
-        "name": "finishMint_Kaiba",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-            }
-        ],
-        "name": "finishMint_Yugi",
+        "name": "finishMint",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -330,14 +232,8 @@ var duel_nfts_abi = [
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "user",
-                "type": "address"
-            }
-        ],
-        "name": "getCardsAtAddress",
+        "inputs": [],
+        "name": "getCardAtUser",
         "outputs": [
             {
                 "internalType": "uint256[]",
@@ -387,14 +283,15 @@ var duel_nfts_abi = [
     },
     {
         "inputs": [],
-        "name": "openBooster",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "requestId",
-                "type": "bytes32"
-            }
-        ],
+        "name": "openBooster_Kaiba",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "openBooster_Yugi",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -626,13 +523,27 @@ var duel_nfts_abi = [
             },
             {
                 "internalType": "uint256",
-                "name": "rarity",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
                 "name": "amount_available",
                 "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenIdToHeroBooster",
+        "outputs": [
+            {
+                "internalType": "enum Duel_NFTs.Heroes",
+                "name": "",
+                "type": "uint8"
             }
         ],
         "stateMutability": "view",
@@ -700,7 +611,7 @@ var duel_nfts_abi = [
         "type": "function"
     }
 ]
-const duel_nfts_Address = "0x7d0d0bb6b2CE9D05F1B25c799C0DF411Eb8AF978"
+const duel_nfts_Address = "0x9E176921b23de6829Be974aCE4d9Ab829353f085"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
 
@@ -738,7 +649,7 @@ async function balance(){
 }
 
 //create/mint nft\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-async function open_booster_pack(){
+async function open_booster_pack_Yugi(){
   const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
 
   //the transaction
@@ -748,15 +659,31 @@ async function open_booster_pack(){
     'nonce': nonce,
     'gas': 5000000,
     'maxPriorityFeePerGas': 1999999987,
-    'data': nftContract.methods.openBooster().encodeABI()
+    'data': nftContract.methods.openBooster_Yugi().encodeABI()
   };
   const transactionReceipt = await web3.eth.sendTransaction(tx);
+
+  console.log(transactionReceipt);
  
 }
-
-async function open_booster_pack_Yugi(tokenId){
-    open_booster_pack();
-    console.log(tokenId)
+async function open_booster_pack_Kaiba(){
+    const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
+  
+    //the transaction
+    const tx = {
+      'from': user,
+      'to': duel_nfts_Address,
+      'nonce': nonce,
+      'gas': 5000000,
+      'maxPriorityFeePerGas': 1999999987,
+      'data': nftContract.methods.openBooster_Kaiba().encodeABI()
+    };
+    const transactionReceipt = await web3.eth.sendTransaction(tx);
+  
+    console.log(transactionReceipt);
+   
+  }
+async function finishMint(i){
 
     const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
 
@@ -767,29 +694,12 @@ async function open_booster_pack_Yugi(tokenId){
       'nonce': nonce,
       'gas': 5000000,
       'maxPriorityFeePerGas': 1999999987,
-      'data': nftContract.methods.finishMint_Yugi(tokenId).encodeABI()
+      'data': nftContract.methods.finishMint(i).encodeABI()
     };
     const transactionReceipt = await web3.eth.sendTransaction(tx)
-    printCard(tokenId);
+    //printCard(tokenId);
 }
-async function open_booster_pack_Kaiba(tokenId){
-    open_booster_pack();
-    console.log(tokenId)
 
-    const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
-
-    //the transaction
-    const tx = {
-      'from': user,
-      'to': duel_nfts_Address,
-      'nonce': nonce,
-      'gas': 5000000,
-      'maxPriorityFeePerGas': 1999999987,
-      'data': nftContract.methods.finishMint_Kaiba(tokenId).encodeABI()
-    };
-    const transactionReceipt = await web3.eth.sendTransaction(tx)
-    printCard(tokenId);
-}
 async function printCard(tokenId){
     nftContract.methods.getCard(tokenId).call().then(function(result){
         window.alert("You obtained a new card : "+result+" !")
@@ -820,13 +730,22 @@ async function duplicate(i) {
     if(i==0){
         original = document.getElementById('mint_package');
         document.getElementById('collection-section').style.display = "block";
-        nftContract.methods.getCardsAtAddress(user).call().then(async function(cardArray){
+        nftContract.methods.getCardsAtUser().call().then(async function(cardArray){
             //    console.log(cardArray);
                 nftContract.methods.getCard(cardArray[0]).call().then(async function(cardName){
-                    let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
+                    //unminted
+                    if(cardName == ""){
+                        let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cardback.jpg"
+                        original.innerHTML += '<img class="boosters" src="'+imgSrc+'" onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 12%;" />'
 
-                    original.innerHTML += cardName
-                    original.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+                    }
+                    //minted
+                    else{
+                        let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
+
+                        original.innerHTML += '<img class="boosters" src="'+imgSrc+'"  onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+
+                    }
                 })
             });
     }
@@ -835,13 +754,13 @@ async function duplicate(i) {
     }  
 
     let clone = original.cloneNode(true); // "deep" clone
-    nftContract.methods.getCardsAtAddress(user).call().then(async function(cardArray){
+    nftContract.methods.getCardsAtUser().call().then(async function(cardArray){
     //    console.log(cardArray);
         nftContract.methods.getCard(cardArray[i]).call().then(async function(cardName){
             //unminted
             if(cardName == ""){
                 let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cardback.jpg"
-                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 12%;" />'
+                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 12%;" />'
 
             }
             //minted
@@ -849,7 +768,7 @@ async function duplicate(i) {
                 clone.innerHTML += cardName
                 let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
 
-                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
 
             }
             
@@ -860,7 +779,7 @@ async function duplicate(i) {
     
 }
 //loading functions to html
-document.getElementById("yugi").addEventListener("click", open_booster_pack);
+document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
 document.getElementById("kaiba").addEventListener("click", open_booster_pack_Kaiba);
 
 //login button
