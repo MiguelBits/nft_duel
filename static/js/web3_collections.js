@@ -615,57 +615,28 @@ const duel_nfts_Address = "0x9E176921b23de6829Be974aCE4d9Ab829353f085"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
 
-                            // Functions below \\
-sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-//conections to web3\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-async function login() {
-  //login method
-  ethereum.request({ method: 'eth_requestAccounts' });
-  //get user to var
-  web3.eth.getAccounts().then(function(result){
-    user = web3.utils.toChecksumAddress(result[0])
-
-    //console.log(user)
-    //display and fetch balance of current user
-    balance();
-    duel_nfts_amount();
-  })
-  
+async function refresh(){
+    document.getElementById("refresh-button").style.display = "none"
+    display_mint_packages();
 }
-
 
 async function balance(){
-  let balance;
-  web3.eth.getBalance(user, (error, balanceInWei) => {
-    balance = web3.utils.fromWei(balanceInWei, 'ether')
-    //write balance on html
-    //format to 4 decimals, change 1000 and 4 for other decimals point
-    document.getElementById("balance").innerHTML = (Math.round(balance * 10000) / 10000).toFixed(4);;
-    });
+    let balance;
+    web3.eth.getBalance(user, (error, balanceInWei) => {
+      balance = web3.utils.fromWei(balanceInWei, 'ether')
+      //write balance on html
+      //format to 4 decimals, change 1000 and 4 for other decimals point
+      document.getElementById("balance").innerHTML = (Math.round(balance * 10000) / 10000).toFixed(4);;
+      });
+    
+  }
   
-}
 
-//create/mint nft\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-async function open_booster_pack_Yugi(){
-  const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
+//create mint button in collections\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+async function finishMint(i){
 
-  //the transaction
-  const tx = {
-    'from': user,
-    'to': duel_nfts_Address,
-    'nonce': nonce,
-    'gas': 5000000,
-    'maxPriorityFeePerGas': 1999999987,
-    'data': nftContract.methods.openBooster_Yugi().encodeABI()
-  };
-  const transactionReceipt = await web3.eth.sendTransaction(tx);
-
-  console.log(transactionReceipt);
- 
-}
-async function open_booster_pack_Kaiba(){
     const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
-  
+
     //the transaction
     const tx = {
       'from': user,
@@ -673,32 +644,96 @@ async function open_booster_pack_Kaiba(){
       'nonce': nonce,
       'gas': 5000000,
       'maxPriorityFeePerGas': 1999999987,
-      'data': nftContract.methods.openBooster_Kaiba().encodeABI()
+      'data': nftContract.methods.finishMint(i).encodeABI()
     };
-    const transactionReceipt = await web3.eth.sendTransaction(tx);
-  
-    console.log(transactionReceipt);
-   
-  }
+    const transactionReceipt = await web3.eth.sendTransaction(tx)
+    //printCard(tokenId);
+}
+async function display_mint_packages(){
+    let i = 0;
+    await nftContract.methods.balanceOf(user).call().then(function(lengthOfCollection){
+        for(i;i<lengthOfCollection-1;i++){
+            duplicate(i)
+        }
+        
+    });
+    
+}
+//duplicate button
+async function duplicate(i) {
 
+    let original;
+    if(i==0){
+        original = document.getElementById('mint_package');
+        document.getElementById('collection-section').style.display = "block";
+        nftContract.methods.getCardsAtUser().call().then(async function(cardArray){
+            //    console.log(cardArray);
+                nftContract.methods.getCard(cardArray[0]).call().then(async function(cardName){
+                    //unminted
+                    if(cardName == ""){
+                        let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cardback.jpg"
+                        original.innerHTML += '<img class="boosters" src="'+imgSrc+'" onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 12%;" />'
+
+                    }
+                    //minted
+                    else{
+                        let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
+
+                        original.innerHTML += '<img class="boosters" src="'+imgSrc+'"  onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+
+                    }
+                })
+            });
+    }
+    else{
+        original = document.getElementById('mint_package'+i);
+    }  
+
+    let clone = original.cloneNode(true); // "deep" clone
+    nftContract.methods.getCardsAtUser().call().then(async function(cardArray){
+    //    console.log(cardArray);
+        nftContract.methods.getCard(cardArray[i]).call().then(async function(cardName){
+            //unminted
+            if(cardName == ""){
+                let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cardback.jpg"
+                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 12%;" />'
+
+            }
+            //minted
+            else{
+                clone.innerHTML += cardName
+                let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
+
+                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" onclick="finishMint('+i+')" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+
+            }
+            
+        })
+    });
+    clone.id = "mint_package" + ++i;
+    original.parentNode.appendChild(clone);
+    
+}
+//show cards next to balance
+async function duel_nfts_amount(){
+    nftContract.methods.balanceOf(user).call().then(function(result){
+      document.getElementById("cards").innerHTML = result;
+    });
+  }
 
 async function printCard(tokenId){
     nftContract.methods.getCard(tokenId).call().then(function(result){
         window.alert("You obtained a new card : "+result+" !")
       });
 }
-//show cards next to balance
-async function duel_nfts_amount(){
-  nftContract.methods.balanceOf(user).call().then(function(result){
-    document.getElementById("cards").innerHTML = result;
-  });
+
+
+document.getElementById("refresh-button").addEventListener("click", refresh);
+
+var mycollectionScroll = document.getElementById("wrapper")
+if(mycollectionScroll){
+    mycollectionScroll.onscroll = function() {
+        wrapper1.scrollLeft = wrapper2.scrollLeft;
+      };
 }
-
-//loading functions to html
-document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
-document.getElementById("kaiba").addEventListener("click", open_booster_pack_Kaiba);
-
-//login button
-var myButton = document.getElementById("login-button");
-document.getElementById("login-button").addEventListener("click", login);
 
