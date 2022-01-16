@@ -2,7 +2,23 @@ let web3 = new Web3(Web3.givenProvider);
 //CTRL + SHIFT + [ to hide variable
 var duel_nfts_abi = [
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_VRFCoordinator",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_LinkToken",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_keyHash",
+                "type": "bytes32"
+            }
+        ],
         "stateMutability": "nonpayable",
         "type": "constructor"
     },
@@ -184,7 +200,7 @@ var duel_nfts_abi = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "i",
+                "name": "tokenId",
                 "type": "uint256"
             }
         ],
@@ -232,8 +248,14 @@ var duel_nfts_abi = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "getCardAtUser",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getCardsAtAddress",
         "outputs": [
             {
                 "internalType": "uint256[]",
@@ -283,15 +305,14 @@ var duel_nfts_abi = [
     },
     {
         "inputs": [],
-        "name": "openBooster_Kaiba",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "openBooster_Yugi",
-        "outputs": [],
+        "name": "openBooster",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "requestId",
+                "type": "bytes32"
+            }
+        ],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -523,27 +544,13 @@ var duel_nfts_abi = [
             },
             {
                 "internalType": "uint256",
-                "name": "amount_available",
+                "name": "rarity",
                 "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
+            },
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "amount_available",
                 "type": "uint256"
-            }
-        ],
-        "name": "tokenIdToHeroBooster",
-        "outputs": [
-            {
-                "internalType": "enum Duel_NFTs.Heroes",
-                "name": "",
-                "type": "uint8"
             }
         ],
         "stateMutability": "view",
@@ -611,7 +618,7 @@ var duel_nfts_abi = [
         "type": "function"
     }
 ]
-const duel_nfts_Address = "0x9E176921b23de6829Be974aCE4d9Ab829353f085"
+const duel_nfts_Address = "0xdAeD677DFC0b9f2cDCB686a59C17e8d6d72240c1"
 let nftContract = new web3.eth.Contract(duel_nfts_abi, duel_nfts_Address)
 var user;
 
@@ -632,7 +639,10 @@ async function login() {
   })
   
 }
-
+async function refresh(){
+    display_mint_packages();
+    document.getElementById("refresh-button").style.display = "none"
+}
 
 async function balance(){
   let balance;
@@ -646,7 +656,8 @@ async function balance(){
 }
 
 //create/mint nft\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-async function open_booster_pack_Yugi(){
+function open_booster_pack_Yugi(){open_booster_pack("Yugi")}
+async function open_booster_pack(_hero){
   const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
 
   //the transaction
@@ -656,16 +667,18 @@ async function open_booster_pack_Yugi(){
     'nonce': nonce,
     'gas': 5000000,
     'maxPriorityFeePerGas': 1999999987,
-    'data': nftContract.methods.openBooster_Yugi().encodeABI()
+    'data': nftContract.methods.openBooster().encodeABI()
   };
   const transactionReceipt = await web3.eth.sendTransaction(tx);
-
-  console.log(transactionReceipt);
  
 }
-async function open_booster_pack_Kaiba(){
+
+async function finish_mint_card(tokenId){
+
+    console.log(tokenId)
+
     const nonce = await web3.eth.getTransactionCount(user, 'latest'); //get latest nonce
-  
+
     //the transaction
     const tx = {
       'from': user,
@@ -673,15 +686,11 @@ async function open_booster_pack_Kaiba(){
       'nonce': nonce,
       'gas': 5000000,
       'maxPriorityFeePerGas': 1999999987,
-      'data': nftContract.methods.openBooster_Kaiba().encodeABI()
+      'data': nftContract.methods.finishMint(tokenId).encodeABI()
     };
-    const transactionReceipt = await web3.eth.sendTransaction(tx);
-  
-    console.log(transactionReceipt);
-   
-  }
-
-
+    const transactionReceipt = await web3.eth.sendTransaction(tx)
+    printCard(tokenId);
+}
 async function printCard(tokenId){
     nftContract.methods.getCard(tokenId).call().then(function(result){
         window.alert("You obtained a new card : "+result+" !")
@@ -693,12 +702,80 @@ async function duel_nfts_amount(){
     document.getElementById("cards").innerHTML = result;
   });
 }
+//create mint button in collections\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+async function display_mint_packages(){
+    let i = 0;
+    await nftContract.methods.balanceOf(user).call().then(function(lengthOfCollection){
+        for(i;i<lengthOfCollection-1;i++){
+            duplicate(i)
+        }
+        
+    });
+    
+}
+//duplicate button
+async function duplicate(i) {
+
+    let original;
+    if(i==0){
+        original = document.getElementById('mint_package');
+        document.getElementById('collection-section').style.display = "block";
+        nftContract.methods.getCardsAtAddress(user).call().then(async function(cardArray){
+            //    console.log(cardArray);
+                nftContract.methods.getCard(cardArray[0]).call().then(async function(cardName){
+                    let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
+
+                    original.innerHTML += cardName
+                    original.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+                })
+            });
+    }
+    else{
+        original = document.getElementById('mint_package'+i);
+    }  
+
+    let clone = original.cloneNode(true); // "deep" clone
+    nftContract.methods.getCardsAtAddress(user).call().then(async function(cardArray){
+    //    console.log(cardArray);
+        nftContract.methods.getCard(cardArray[i]).call().then(async function(cardName){
+            //unminted
+            if(cardName == ""){
+                let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cardback.jpg"
+                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 12%;" />'
+
+            }
+            //minted
+            else{
+                clone.innerHTML += cardName
+                let imgSrc = "https://raw.githubusercontent.com/mcruzvas/nft_duel/main/static/images/product/cards/"+cardName+".jpg"
+
+                clone.innerHTML += '<img class="boosters" src="'+imgSrc+'" alt="" style="max-width: 73%; margin: auto; margin-bottom: -25%; margin-top: 5%;" />'
+
+            }
+            
+        })
+    });
+    clone.id = "mint_package" + ++i;
+    original.parentNode.appendChild(clone);
+    
+}
 //loading functions to html
 document.getElementById("yugi").addEventListener("click", open_booster_pack_Yugi);
-document.getElementById("kaiba").addEventListener("click", open_booster_pack_Kaiba);
-
-//login button
 var myButton = document.getElementById("login-button");
-document.getElementById("login-button").addEventListener("click", login);
+if(myButton){
+    document.getElementById("login-button").addEventListener("click", login);
+}
+else{
+    login()
+    document.getElementById("refresh-button").addEventListener("click", refresh);
+}
+
+var mycollectionScroll = document.getElementById("wrapper")
+if(mycollectionScroll){
+    mycollectionScroll.onscroll = function() {
+        wrapper1.scrollLeft = wrapper2.scrollLeft;
+      };
+}
+
 
