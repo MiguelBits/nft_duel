@@ -95,12 +95,12 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
     }
 
 
-    constructor ()  
-    VRFConsumerBase(0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9,0xa36085F69e2889c224210F603D836748e7dC0088)
+    constructor (address _VRFCoordinator, address _LinkToken, bytes32 _keyhash, uint256 _fee) 
+    VRFConsumerBase(_VRFCoordinator, _LinkToken)
     ERC721("Duel Monsters","DM"){
         
-        keyHash = 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4;
-        fee = 0.1*10**18; //chainlink gas fee of 0.1LINK
+        keyHash = _keyhash;
+        fee = _fee; //chainlink gas fee of 0.1LINK
 
         create();
 
@@ -140,12 +140,20 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
 
     }
     //function to use random Number
-    function finishMint(uint i) public {
-        uint tokenId = _tokenIdCounter.current();
-        
-        _safeMint(msg.sender, tokenId);
+    function finishMint(uint tokenId) public {
 
-        tokenIdToCard[tokenId] = yugi_deck[i];
+        require(tokenIdToRandomNumber[tokenId] > 0, "Need to wait for Chainlink node to respond!");    
+        bytes memory card = bytes(getCard(tokenId));
+        require(card.length == 0);
+        uint256 randomNumber = tokenIdToRandomNumber[tokenId];
+        Card memory randCard;
+        if(tokenIdToHeroBooster[tokenId] == Heroes.Yugi){
+            randCard = yugi_deck[randomNumber];
+        }
+        if(tokenIdToHeroBooster[tokenId] == Heroes.Kaiba){
+            randCard = kaiba_deck[randomNumber];
+        }
+        tokenIdToCard[tokenId] = randCard;
 
         _tokenIdCounter.increment();
     }
@@ -163,7 +171,7 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
     }
 
     function getCard(uint _id) public view returns(string memory){
-        console.log(tokenIdToCard[_id].name);
+        //console.log(tokenIdToCard[_id].name);
         return tokenIdToCard[_id].name;
     }
 
@@ -175,10 +183,10 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
         Card memory cardAttributes = tokenIdToCard[_tokenId];
 
-        string memory strStars = Strings.toString(cardAttributes.stars);
-        string memory strAttack = Strings.toString(cardAttributes.attack);
-        string memory strDefense = Strings.toString(cardAttributes.defense);
-        string memory strAmount = Strings.toString(cardAttributes.amount_available);
+        //string memory strStars = Strings.toString(cardAttributes.stars);
+        //string memory strAttack = Strings.toString(cardAttributes.attack);
+        //string memory strDefense = Strings.toString(cardAttributes.defense);
+        //string memory strAmount = Strings.toString(cardAttributes.amount_available);
         string memory json = Base64.encode(
             abi.encodePacked(
             '{"name": "',
@@ -193,7 +201,7 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
         string memory output = string(
             abi.encodePacked("data:application/json;base64,", json)
         );
-        console.log(output);
+        //console.log(output);
         return output;
     }
 }

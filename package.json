@@ -1,24 +1,40 @@
 {
-  "name": "epic-game",
-  "version": "1.0.0",
+  "name": "chainlink-hardhat-box",
+  "version": "latest",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.4",
-    "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "chai": "^4.3.4",
-    "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.5.3",
-    "hardhat": "^2.8.2"
+    "@nomiclabs/hardhat-ethers": "latest",
+    "@nomiclabs/hardhat-etherscan": "latest",
+    "@nomiclabs/hardhat-waffle": "latest",
+    "chai": "latest",
+    "chai-bignumber": "latest",
+    "chai-bn": "latest",
+    "ethereum-waffle": "latest",
+    "ethers": "latest",
+    "hardhat": "latest",
+    "hardhat-deploy": "latest",
+    "web3": "latest"
   },
   "dependencies": {
-    "@chainlink/contracts": "^0.3.1",
-    "@openzeppelin/contracts": "^4.4.2"
+    "@chainlink/contracts": "latest",
+    "@chainlink/test-helpers": "latest",
+    "@chainlink/token": "latest",
+    "@nomiclabs/hardhat-truffle5": "latest",
+    "@nomiclabs/hardhat-web3": "latest",
+    "@openzeppelin/contracts": "latest",
+    "babel-eslint": "latest",
+    "base64-sol": "latest",
+    "dotenv": "latest",
+    "eslint": "latest",
+    "mocha-skip-if": "latest",
+    "transform": "latest"
+  },
+  "mocha": {
+    "timeout": 10000000
   }
 }
