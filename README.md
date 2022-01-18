@@ -19,4 +19,5 @@ npx hardhat run scripts/run.js --network rinkeby
 https://rinkeby.rarible.com/collection/0x96d6c351a049b4bc0ab709dae0080f4d09d9e2ae/items
 
 ![NFT market Page](https://github.com/mcruzvas/nft_duel/blob/main/Screenshot%202022-01-16%20194839.png?raw=true)
-
+# OpenSea G546JJafbj
+![imagem](https://user-images.githubusercontent.com/15989933/149954156-fa829433-6c86-40f9-ab29-a68b4042cbe5.png)
