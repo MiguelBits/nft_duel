@@ -126,9 +126,10 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
     }
     //mint token
     function openBooster_Yugi() public{
+
         //kick off randomness from oracle
         bytes32 requestId = requestRandomness(keyHash, fee);
-        
+
         requestIdToSender[requestId] = msg.sender;
         
         uint tokenId = _tokenIdCounter.current(); 
@@ -165,6 +166,7 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
         //deploy/mint
         uint256 tokenId = requestIdToTokenId[requestId];
         _safeMint(cardOwner, tokenId);
+        tokenURI(tokenId);
         tokenIdToRandomNumber[tokenId] = randomNumber;
 
         emit CreatedUnfinishedRandom(tokenId, randomNumber);
@@ -175,7 +177,7 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
         return tokenIdToCard[_id].name;
     }
 
-    function getCardAtUser()public view returns(uint[] memory array){
+    function getCardsAtUser()public view returns(uint[] memory array){
         array = cardsAtAddress[msg.sender];
         return array;
     }
@@ -194,7 +196,12 @@ contract Duel_NFTs is ERC721, VRFConsumerBase{
             ' -- NFT #: ',
             Strings.toString(_tokenId),
             '","description": "Duel Monster cards", "image": "',
-            cardAttributes.imageURI,'"}'
+            cardAttributes.imageURI,
+            '","attributes": [{ "attack": ',cardAttributes.attack,
+            '"defense": ',cardAttributes.defense,
+            '"stars": ',cardAttributes.stars,
+            '"description": ',cardAttributes.description,
+            '"amount_available": ',cardAttributes.amount_available,'}]}'
             )
         );
 
